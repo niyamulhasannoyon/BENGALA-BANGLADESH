@@ -1,11 +1,13 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useHeroStore } from '@/lib/store/useHeroStore';
 import { toggleBookmarkAction } from '@/app/actions/destinationActions';
 import { useToast } from '@/components/ui/ToastProvider';
-import { Star, ArrowUpRight, Bookmark, Calendar, MapPin, Sparkles } from 'lucide-react';
+import { Star, ArrowRight, Bookmark, Calendar, MapPin, Sparkles } from 'lucide-react';
+import { LUXURY_EASE, TRANSITION_FAST, TRANSITION_LUXURY } from '@/lib/motion';
 
 export const HeroContent: React.FC = () => {
   const {
@@ -17,7 +19,7 @@ export const HeroContent: React.FC = () => {
   } = useHeroStore();
   const { showToast } = useToast();
 
-  const current = destinations[activeIndex];
+  const current = destinations[activeIndex] || destinations[0];
 
   if (!current) return null;
 
@@ -50,131 +52,112 @@ export const HeroContent: React.FC = () => {
   };
 
   return (
-    <div className="relative z-10 w-full max-w-2xl text-left flex flex-col justify-center select-none">
+    <div className="relative z-10 w-full max-w-2xl text-left flex flex-col justify-center select-none pt-4 sm:pt-0">
       <AnimatePresence mode="wait">
         <motion.div
           key={current.slug}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, y: -16 }}
+          transition={TRANSITION_LUXURY}
           className="space-y-6"
         >
-          {/* Tagline / Category Pill */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-            className="flex flex-wrap items-center gap-3"
-          >
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-panel border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase tracking-[0.2em] shadow-lg shadow-emerald-950/40">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          {/* Overline: Category & Locale */}
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-brass/35 text-brass text-[11px] font-semibold uppercase tracking-[0.22em]">
+              <span className="w-1.5 h-1.5 rounded-full bg-brass animate-pulse" />
               <span>{current.categoryBadge}</span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 text-xs text-neutral-400 font-mono">
-              <MapPin className="w-3.5 h-3.5 text-cyan-400" />
+            <div className="inline-flex items-center gap-1.5 text-xs text-mist font-mono tracking-wider">
+              <MapPin className="w-3.5 h-3.5 text-brass/80" />
               <span>{current.region}, {current.country}</span>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Main Bold Sculptural Typography */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-2"
-          >
-            <h1 className="font-syne text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.05] drop-shadow-2xl">
+          {/* Main Editorial Headline */}
+          <div className="space-y-3">
+            <h1 className="font-syne text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-alabaster leading-[1.08]">
               {current.title}
             </h1>
-            <p className="font-serif italic text-base sm:text-lg text-emerald-200/90 tracking-wide font-light">
+            <p className="font-serif italic text-base sm:text-lg text-[#DFCCA9] tracking-wide font-light">
               &ldquo;{current.tagLine}&rdquo;
             </p>
-          </motion.div>
+          </div>
 
-          {/* Editorial Narrative Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-sm sm:text-base text-neutral-300/90 leading-relaxed font-normal max-w-xl line-clamp-3 sm:line-clamp-none drop-shadow"
-          >
+          {/* Narrative Body Copy */}
+          <p className="text-sm sm:text-base text-mist leading-editorial font-normal max-w-xl">
             {current.description}
-          </motion.p>
+          </p>
 
-          {/* Key Expedition Badges */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="flex flex-wrap items-center gap-4 text-xs"
-          >
+          {/* Expedition Badges */}
+          <div className="flex flex-wrap items-center gap-3 text-xs">
             {/* Rating */}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass-panel text-amber-300">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-brass">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     className={`w-3.5 h-3.5 ${
                       i < Math.floor(current.rating)
-                        ? 'fill-amber-400 text-amber-400'
+                        ? 'fill-brass text-brass'
                         : 'text-neutral-600'
                     }`}
                   />
                 ))}
               </div>
-              <span className="font-semibold font-mono text-white text-xs ml-1">
+              <span className="font-semibold font-mono text-alabaster text-xs ml-1">
                 {current.rating.toFixed(1)}
               </span>
             </div>
 
-            {/* Best Season */}
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass-panel text-neutral-300">
-              <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Optimal: <strong className="text-white font-medium">{current.bestSeason}</strong></span>
+            {/* Optimal Season */}
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-mist">
+              <Calendar className="w-3.5 h-3.5 text-brass" />
+              <span>Season: <strong className="text-alabaster font-medium">{current.bestSeason}</strong></span>
             </div>
 
-            {/* Curated duration */}
+            {/* Curated Duration */}
             {current.curatedExpedition && (
-              <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg glass-panel text-neutral-300">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.08] text-mist">
+                <Sparkles className="w-3.5 h-3.5 text-brass" />
                 <span>{current.curatedExpedition.duration}</span>
               </div>
             )}
-          </motion.div>
+          </div>
 
-          {/* Action CTAs: Glowing "Explore" + "Save Itinerary" */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="flex items-center gap-4 pt-2"
-          >
-            {/* Glowing CTA Button */}
-            <button
-              onClick={() => openExpeditionModal(current)}
-              className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 text-black font-semibold text-sm tracking-wider uppercase shadow-[0_0_35px_rgba(16,185,129,0.4)] hover:shadow-[0_0_50px_rgba(34,211,238,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+          {/* Primary Action Buttons */}
+          <div className="flex items-center gap-4 pt-2">
+            {/* Primary Action: Link to dedicated landing page */}
+            <Link
+              href={`/destinations/${current.slug}`}
+              className="group inline-flex items-center gap-3 px-7 py-3.5 rounded-full bg-brass hover:bg-brass-light text-black font-semibold text-xs uppercase tracking-[0.16em] transition-all duration-200 active:scale-95 shadow-md"
             >
               <span>Explore Expedition</span>
-              <div className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
-                <ArrowUpRight className="w-4 h-4 text-black stroke-[2.5]" />
-              </div>
+              <ArrowRight className="w-4 h-4 text-black group-hover:translate-x-1 transition-transform" />
+            </Link>
+
+            {/* Secondary VIP Charter Trigger */}
+            <button
+              onClick={() => openExpeditionModal(current)}
+              className="hidden sm:inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.12] hover:border-brass/40 text-alabaster text-xs font-semibold uppercase tracking-[0.14em] transition-all"
+            >
+              <span>VIP Charter</span>
             </button>
 
-            {/* Quick Bookmark Toggle */}
+            {/* Bookmark Action */}
             <button
               onClick={handleBookmarkToggle}
               aria-label={isBookmarked ? 'Remove from saved' : 'Save expedition'}
-              className={`p-4 rounded-full glass-button flex items-center justify-center transition-all ${
+              className={`p-3.5 rounded-full border transition-all ${
                 isBookmarked
-                  ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-lg shadow-emerald-950/50'
-                  : 'text-neutral-300 hover:text-white'
+                  ? 'bg-brass/20 text-brass border-brass/50'
+                  : 'bg-white/[0.04] text-mist hover:text-alabaster border-white/[0.1] hover:border-brass/30'
               }`}
             >
-              <Bookmark className={`w-5 h-5 ${isBookmarked ? 'fill-emerald-400' : ''}`} />
+              <Bookmark className={`w-4.5 h-4.5 ${isBookmarked ? 'fill-brass' : ''}`} />
             </button>
-          </motion.div>
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>

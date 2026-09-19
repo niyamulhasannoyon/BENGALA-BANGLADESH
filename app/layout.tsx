@@ -16,9 +16,13 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://bengala-expeditions.com'),
   title: 'BENGALA • Ultra-Luxury Bangladesh Expeditions',
   description:
     'Experience the untouched wilderness of Bangladesh in cinematic luxury. Private river yachts through the Sundarbans, sky villas above Sajek clouds, and pristine coral atolls.',
+  alternates: {
+    canonical: '/',
+  },
   keywords: [
     'Bangladesh luxury travel',
     'Sundarbans private yacht',
@@ -38,7 +42,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#050A07',
+  themeColor: '#080D0A',
   colorScheme: 'dark',
 };
 
@@ -49,7 +53,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${syne.variable} ${plusJakartaSans.variable}`}>
-      <body className="bg-bengal-950 text-neutral-100 min-h-screen selection:bg-emerald-500/30 selection:text-white antialiased overflow-x-hidden">
+      <body className="bg-[#080D0A] text-[#F4F6F4] min-h-screen selection:bg-[#C5A880]/30 selection:text-white antialiased overflow-x-hidden">
         <ToastProvider>{children}</ToastProvider>
       </body>
     </html>

@@ -8,6 +8,12 @@ import { HeroContent } from './HeroContent';
 import { CarouselDeck } from './CarouselDeck';
 import { DockControls } from './DockControls';
 import { Navbar } from '@/components/ui/Navbar';
+import { TrustStrip } from '@/components/home/TrustStrip';
+import { ExpeditionsOverview } from '@/components/home/ExpeditionsOverview';
+import { HeritageNarrative } from '@/components/home/HeritageNarrative';
+import { TestimonialsPress } from '@/components/home/TestimonialsPress';
+import { BespokeBanner } from '@/components/home/BespokeBanner';
+import { Footer } from '@/components/ui/Footer';
 import { ExpeditionModal } from '@/components/ui/ExpeditionModal';
 import { BookmarksDrawer } from '@/components/ui/BookmarksDrawer';
 
@@ -62,7 +68,7 @@ export const HeroShowcase: React.FC<HeroShowcaseProps> = ({
     }
   }, [bookmarkedIds]);
 
-  // Autoplay Timer (6000ms) with Pause-on-hover & Smooth Progress Tracking
+  // Autoplay Timer with Pause-on-hover & Smooth Progress Tracking
   const startTimeRef = useRef<number | null>(null);
   const pausedTimeRef = useRef<number>(0);
 
@@ -130,36 +136,55 @@ export const HeroShowcase: React.FC<HeroShowcaseProps> = ({
   }, [nextSlide, prevSlide, activeModalDestination, closeExpeditionModal, isBookmarksDrawerOpen, toggleBookmarksDrawer]);
 
   return (
-    <main className="relative w-screen h-screen min-h-[680px] overflow-hidden bg-bengal-950">
-      {/* 1. Synced Cross-fade Hero Background */}
-      <HeroBackground />
-
-      {/* 2. Top Luxury Navigation */}
+    <div className="relative min-h-screen bg-[#080D0A] text-alabaster overflow-x-hidden">
+      {/* 1. Slim Sticky Navigation Header */}
       <Navbar />
 
-      {/* 3. Central Stage: Left Content + Right 3D Carousel Deck */}
-      <div className="relative z-10 w-full h-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col justify-center pb-20 pt-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center w-full">
-          {/* Left: Staggered Hero Typography & Narrative */}
-          <div className="lg:col-span-7 flex flex-col justify-center">
-            <HeroContent />
-          </div>
+      {/* 2. Full-Bleed Hero Section */}
+      <section className="relative min-h-[90vh] lg:min-h-[calc(100vh-4.5rem)] flex flex-col justify-between overflow-hidden">
+        {/* Synced Cross-fade Hero Background */}
+        <HeroBackground />
 
-          {/* Right: 3D Perspective Card Deck */}
-          <div className="lg:col-span-5 flex flex-col justify-center items-end">
-            <CarouselDeck />
+        {/* Central Hero Stage: Typography + Stepped Deck */}
+        <div className="relative z-10 w-full flex-1 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex flex-col justify-center py-10 lg:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
+            {/* Left: Staggered Hero Typography & Narrative */}
+            <div className="lg:col-span-7 flex flex-col justify-center">
+              <HeroContent />
+            </div>
+
+            {/* Right: Editorial Stepped Deck */}
+            <div className="lg:col-span-5 flex flex-col justify-center items-end">
+              <CarouselDeck />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* 4. Floating Bottom Luxury Dock Controls */}
-      <DockControls />
+        {/* Floating Bottom Dock Controls */}
+        <DockControls />
+      </section>
 
-      {/* 5. Deep Itinerary & VIP Concierge Inquiry Modal */}
+      {/* 3. Trust & Sustainability Credentials */}
+      <TrustStrip />
+
+      {/* 4. Grand Portfolio Overview Grid */}
+      <ExpeditionsOverview />
+
+      {/* 5. Heritage & Private Fleet Narrative */}
+      <HeritageNarrative />
+
+      {/* 6. International Press & Guest Chronicles */}
+      <TestimonialsPress />
+
+      {/* 7. Bespoke Journey Invitation Banner */}
+      <BespokeBanner />
+
+      {/* 8. Comprehensive Editorial Footer */}
+      <Footer />
+
+      {/* VIP Concierge Modal & Saved Expeditions Drawer */}
       <ExpeditionModal />
-
-      {/* 6. Saved Expeditions Drawer */}
       <BookmarksDrawer />
-    </main>
+    </div>
   );
 };

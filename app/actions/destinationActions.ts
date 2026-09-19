@@ -168,3 +168,55 @@ export async function getUserBookmarksAction(
     return [];
   }
 }
+
+/**
+ * Retrieve a destination by its slug with fallback to curated dataset
+ */
+export async function getDestinationBySlugAction(
+  slug: string
+): Promise<IDestination | null> {
+  try {
+    const db = await connectToDatabase();
+    if (db) {
+      const doc = await Destination.findOne({ slug }).lean();
+      if (doc) {
+        return {
+          _id: doc._id.toString(),
+          title: doc.title,
+          slug: doc.slug,
+          tagLine: doc.tagLine,
+          categoryBadge: doc.categoryBadge,
+          region: doc.region,
+          country: doc.country,
+          heroBgUrl: doc.heroBgUrl,
+          cardThumbUrl: doc.cardThumbUrl,
+          blurDataUrl: doc.blurDataUrl || '',
+          rating: doc.rating,
+          orderIndex: doc.orderIndex,
+          isFeatured: doc.isFeatured,
+          description: doc.description,
+          highlights: doc.highlights || [],
+          bestSeason: doc.bestSeason,
+          coordinates: {
+            lat: doc.coordinates?.lat ?? 21.9497,
+            lng: doc.coordinates?.lng ?? 89.1833,
+          },
+          curatedExpedition: doc.curatedExpedition
+            ? {
+                title: doc.curatedExpedition.title,
+                duration: doc.curatedExpedition.duration,
+                priceStarting: doc.curatedExpedition.priceStarting,
+                features: doc.curatedExpedition.features || [],
+              }
+            : undefined,
+        };
+      }
+    }
+  } catch (error) {
+    console.error('[getDestinationBySlugAction] Error querying destination by slug:', error);
+  }
+
+  const fallback = BANGLADESH_DESTINATIONS.find((d) => d.slug === slug);
+  return fallback || null;
+}
+

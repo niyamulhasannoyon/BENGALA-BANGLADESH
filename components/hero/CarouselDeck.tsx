@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useHeroStore } from '@/lib/store/useHeroStore';
 import { toggleBookmarkAction } from '@/app/actions/destinationActions';
 import { useToast } from '@/components/ui/ToastProvider';
 import { Bookmark, Star, ArrowRight } from 'lucide-react';
 import { formatIndex } from '@/lib/utils';
+import { TRANSITION_LUXURY } from '@/lib/motion';
 
 export const CarouselDeck: React.FC = () => {
   const {
@@ -21,17 +23,8 @@ export const CarouselDeck: React.FC = () => {
   } = useHeroStore();
   const { showToast } = useToast();
 
-  const preloadedUrls = useRef<Set<string>>(new Set());
-
-  const handlePreload = (url: string) => {
-    if (!preloadedUrls.current.has(url) && typeof window !== 'undefined') {
-      const img = new window.Image();
-      img.src = url;
-      preloadedUrls.current.add(url);
-    }
-  };
-
   const handleBookmarkToggle = async (e: React.MouseEvent, destinationId: string, title: string) => {
+    e.preventDefault();
     e.stopPropagation();
     const newStatus = toggleBookmarkOptimistic(destinationId);
     showToast({
@@ -53,76 +46,62 @@ export const CarouselDeck: React.FC = () => {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      {/* DESKTOP 3D CAROUSEL DECK (hidden on mobile, visible md+) */}
-      <div className="hidden md:flex items-center justify-end h-[360px] perspective-[1200px] overflow-visible pr-4 lg:pr-12">
-        <div className="relative w-[340px] lg:w-[380px] h-[320px]">
+      {/* DESKTOP REFINED EDITORIAL CAROUSEL (hidden on mobile, visible md+) */}
+      <div className="hidden md:flex items-center justify-end h-[380px] overflow-visible pr-2 lg:pr-8">
+        <div className="relative w-[340px] lg:w-[380px] h-[340px]">
           {destinations.map((dest, index) => {
-            // Calculate relative offset from active index
             const n = destinations.length;
             const diff = (index - activeIndex + n) % n;
             const isActive = index === activeIndex;
             const isBookmarked = bookmarkedIds.includes(dest._id || '');
 
-            // We only render active and upcoming cards (up to 3 cards visible)
+            // Render active card and up to 3 upcoming cards
             if (diff > 3 && diff < n - 1) return null;
 
-            // Positioning calculations
-            const xOffset = diff * 85; // staggered horizontal distance
-            const scale = isActive ? 1.05 : Math.max(0.85, 1 - diff * 0.08);
+            const xOffset = diff * 76;
+            const scale = isActive ? 1.02 : Math.max(0.86, 1 - diff * 0.07);
             const zIndex = isActive ? 30 : 25 - diff;
-            const opacity = isActive ? 1 : Math.max(0.4, 0.85 - diff * 0.2);
-            const rotateY = isActive ? 0 : -8;
+            const opacity = isActive ? 1 : Math.max(0.35, 0.85 - diff * 0.2);
 
             return (
               <motion.div
                 key={dest.slug}
-                onClick={() => (isActive ? openExpeditionModal(dest) : goToSlide(index))}
-                onMouseEnter={() => {
-                  handlePreload(dest.heroBgUrl);
-                  handlePreload(dest.cardThumbUrl);
-                }}
+                onClick={() => goToSlide(index)}
                 animate={{
                   x: xOffset,
                   scale,
                   opacity,
-                  rotateY,
                   zIndex,
                 }}
-                transition={{
-                  duration: 0.55,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className={`absolute top-0 right-0 w-[300px] lg:w-[320px] h-[320px] rounded-2xl overflow-hidden cursor-pointer group transition-shadow ${
+                transition={TRANSITION_LUXURY}
+                className={`absolute top-0 right-0 w-[300px] lg:w-[320px] h-[340px] rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 ${
                   isActive
-                    ? 'glass-card-active shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_25px_rgba(34,211,238,0.35)] ring-1 ring-cyan-400/50'
-                    : 'glass-card contain-paint shadow-xl hover:opacity-95'
+                    ? 'bg-[#0E1612] border border-brass/50 shadow-[0_20px_40px_rgba(0,0,0,0.8)]'
+                    : 'bg-[#0A100C] border border-white/[0.08] hover:opacity-90'
                 }`}
-                style={{
-                  transformStyle: 'preserve-3d',
-                }}
               >
-                {/* Background Card Image */}
+                {/* Background Image */}
                 <div className="absolute inset-0">
                   <Image
                     src={dest.cardThumbUrl}
                     alt={dest.title}
                     fill
-                    sizes="(max-width: 1024px) 300px, 340px"
+                    sizes="(max-width: 1024px) 300px, 320px"
                     placeholder={dest.blurDataUrl ? 'blur' : 'empty'}
                     blurDataURL={dest.blurDataUrl || undefined}
                     className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/20" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#080D0A] via-[#080D0A]/50 to-[#080D0A]/20" />
                 </div>
 
-                {/* Card Header Content */}
+                {/* Card Overlay Content */}
                 <div className="relative z-10 p-5 h-full flex flex-col justify-between">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-emerald-400 px-2 py-0.5 rounded bg-black/60 border border-emerald-500/30">
+                      <span className="font-mono text-xs font-bold text-brass px-2 py-0.5 rounded bg-black/70 border border-brass/30">
                         {formatIndex(index)}
                       </span>
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-300 bg-black/50 px-2 py-0.5 rounded backdrop-blur-md">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-mist bg-black/60 px-2 py-0.5 rounded backdrop-blur-sm">
                         {dest.categoryBadge}
                       </span>
                     </div>
@@ -130,37 +109,52 @@ export const CarouselDeck: React.FC = () => {
                     {/* Bookmark Action */}
                     <button
                       onClick={(e) => handleBookmarkToggle(e, dest._id || '', dest.title)}
-                      className={`p-2 rounded-full glass-panel transition-all ${
+                      className={`p-2 rounded-full transition-all ${
                         isBookmarked
-                          ? 'text-emerald-400 bg-emerald-500/20 border-emerald-500/50'
-                          : 'text-white/70 hover:text-white bg-black/40 hover:bg-black/60'
+                          ? 'text-brass bg-black/80 border border-brass/40'
+                          : 'text-white/70 hover:text-white bg-black/50 hover:bg-black/80'
                       }`}
                       aria-label={`Bookmark ${dest.title}`}
                     >
-                      <Bookmark className={`w-4 h-4 ${isBookmarked ? 'fill-emerald-400' : ''}`} />
+                      <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-brass' : ''}`} />
                     </button>
                   </div>
 
                   {/* Card Bottom Meta */}
                   <div className="space-y-2">
-                    <div className="flex items-center gap-1 text-amber-300 text-xs">
-                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                      <span className="font-semibold text-white">{dest.rating.toFixed(1)}</span>
-                      <span className="text-neutral-400 text-[11px] ml-1">({dest.region})</span>
+                    <div className="flex items-center gap-1.5 text-brass text-xs">
+                      <Star className="w-3.5 h-3.5 fill-brass text-brass" />
+                      <span className="font-semibold text-alabaster">{dest.rating.toFixed(1)}</span>
+                      <span className="text-mist text-[11px] ml-1 font-mono">({dest.region})</span>
                     </div>
 
-                    <h3 className="font-syne text-lg font-bold text-white tracking-wide leading-snug group-hover:text-cyan-300 transition-colors">
+                    <h3 className="font-syne text-base font-bold text-alabaster tracking-wide leading-snug group-hover:text-brass transition-colors">
                       {dest.title}
                     </h3>
 
-                    <p className="text-xs text-neutral-300 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-mist line-clamp-2 leading-relaxed">
                       {dest.description}
                     </p>
 
                     {isActive && (
-                      <div className="pt-2 flex items-center justify-between text-xs text-cyan-300 font-semibold uppercase tracking-wider">
-                        <span>View Details</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                      <div className="pt-2 flex items-center justify-between">
+                        <Link
+                          href={`/destinations/${dest.slug}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1.5 text-xs text-brass hover:text-brass-light font-semibold uppercase tracking-wider"
+                        >
+                          <span>Full Itinerary</span>
+                          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openExpeditionModal(dest);
+                          }}
+                          className="text-[11px] uppercase tracking-wider text-mist hover:text-alabaster font-mono"
+                        >
+                          Quick Reserve
+                        </button>
                       </div>
                     )}
                   </div>
@@ -171,9 +165,9 @@ export const CarouselDeck: React.FC = () => {
         </div>
       </div>
 
-      {/* MOBILE HORIZONTAL TOUCH SLIDER (<768px) */}
-      <div className="md:hidden w-full px-4 pt-4 pb-2">
-        <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-none py-2 px-1 -mx-4 px-4">
+      {/* MOBILE CLEAN TOUCH SCROLL-SNAP SLIDER (<768px) */}
+      <div className="md:hidden w-full px-2 pt-2 pb-1">
+        <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-none py-2 px-2 -mx-2">
           {destinations.map((dest, index) => {
             const isActive = index === activeIndex;
             const isBookmarked = bookmarkedIds.includes(dest._id || '');
@@ -182,47 +176,55 @@ export const CarouselDeck: React.FC = () => {
               <div
                 key={dest.slug}
                 onClick={() => goToSlide(index)}
-                className={`snap-center shrink-0 w-[260px] h-[210px] relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ${
+                className={`snap-center shrink-0 w-[270px] h-[220px] relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 ${
                   isActive
-                    ? 'ring-2 ring-cyan-400 scale-[1.02] shadow-[0_0_20px_rgba(34,211,238,0.4)]'
-                    : 'opacity-70 scale-95'
+                    ? 'border border-brass shadow-lg scale-[1.01]'
+                    : 'border border-white/[0.08] opacity-75'
                 }`}
               >
                 <Image
                   src={dest.cardThumbUrl}
                   alt={dest.title}
                   fill
-                  sizes="260px"
+                  sizes="270px"
                   placeholder={dest.blurDataUrl ? 'blur' : 'empty'}
                   blurDataURL={dest.blurDataUrl || undefined}
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080D0A] via-[#080D0A]/50 to-transparent" />
 
-                <div className="relative z-10 p-3 h-full flex flex-col justify-between">
+                <div className="relative z-10 p-3.5 h-full flex flex-col justify-between">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-emerald-400 px-1.5 py-0.5 rounded bg-black/60">
+                    <span className="font-mono text-xs font-bold text-brass px-1.5 py-0.5 rounded bg-black/70 border border-brass/30">
                       {formatIndex(index)}
                     </span>
                     <button
                       onClick={(e) => handleBookmarkToggle(e, dest._id || '', dest.title)}
-                      className="p-1.5 rounded-full bg-black/50 text-white"
+                      className="p-1.5 rounded-full bg-black/60 text-white"
                       aria-label="Bookmark destination"
                     >
-                      <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-emerald-400 text-emerald-400' : ''}`} />
+                      <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-brass text-brass' : ''}`} />
                     </button>
                   </div>
 
                   <div>
-                    <span className="text-[9px] uppercase tracking-wider text-emerald-400 font-bold block mb-0.5">
+                    <span className="text-[9px] uppercase tracking-wider text-brass font-bold block mb-0.5">
                       {dest.categoryBadge}
                     </span>
-                    <h4 className="font-syne font-bold text-sm text-white line-clamp-1">
+                    <h4 className="font-syne font-bold text-sm text-alabaster line-clamp-1">
                       {dest.title}
                     </h4>
-                    <p className="text-[11px] text-neutral-400 font-mono mt-0.5">
-                      {dest.region}
-                    </p>
+                    <div className="flex items-center justify-between mt-1 text-[11px] text-mist font-mono">
+                      <span>{dest.region}</span>
+                      <Link
+                        href={`/destinations/${dest.slug}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-brass font-sans font-semibold flex items-center gap-1"
+                      >
+                        <span>View</span>
+                        <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>

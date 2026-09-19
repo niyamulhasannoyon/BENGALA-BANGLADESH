@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    --background: 5 10 7;
-    --foreground: 245 247 246;
+    --background: 8 13 10;
+    --foreground: 244 246 244;
   }
 
   body {
@@ -17,105 +17,95 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Custom selection highlight */
+  /* Refined warm brass selection highlight */
   ::selection {
-    background: rgba(16, 185, 129, 0.3);
+    background: rgba(197, 168, 128, 0.3);
     color: #ffffff;
   }
 }
 
 @layer components {
-  /* Ultra-luxury glassmorphism containers */
+  /* Ultra-luxury refined glassmorphism (restricted to nav, dock, modal, drawer) */
+  .glass-header {
+    background: rgba(8, 13, 10, 0.78);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .glass-dock {
+    background: rgba(10, 16, 12, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+  }
+
   .glass-panel {
-    background: rgba(10, 18, 14, 0.65);
+    background: rgba(12, 19, 15, 0.8);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  .glass-dock {
-    background: rgba(6, 12, 9, 0.75);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 1px 1px rgba(255, 255, 255, 0.05);
-  }
-
-  .glass-card {
-    background: rgba(8, 14, 11, 0.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
   .glass-card-active {
-    background: rgba(12, 22, 17, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(34, 211, 238, 0.45);
-    box-shadow: 0 0 30px rgba(34, 211, 238, 0.25), 0 15px 35px rgba(0, 0, 0, 0.8);
+    background: rgba(14, 22, 18, 0.9);
+    border: 1px solid rgba(197, 168, 128, 0.4);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
   }
 
   .glass-button {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .glass-button:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(197, 168, 128, 0.35);
   }
 
-  /* Cinematic Vignette Overlay */
+  /* Editorial Gradient Text */
+  .text-brass-gradient {
+    background: linear-gradient(135deg, #FFF8ED 0%, #C5A880 50%, #9A7E56 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Subtle Warm Vignette */
   .cinematic-vignette {
     background: radial-gradient(
-      circle at 50% 50%,
-      rgba(0, 0, 0, 0.1) 0%,
-      rgba(0, 0, 0, 0.45) 60%,
-      rgba(4, 7, 5, 0.92) 100%
+      circle at 50% 45%,
+      rgba(0, 0, 0, 0.15) 0%,
+      rgba(4, 7, 5, 0.6) 65%,
+      rgba(8, 13, 10, 0.95) 100%
     );
   }
 
-  /* Gradient text */
-  .text-gold-gradient {
-    background: linear-gradient(135deg, #FFF6D6 0%, #D4AF37 50%, #AA820A 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .text-emerald-gradient {
-    background: linear-gradient(135deg, #E6FDF4 0%, #34D399 50%, #059669 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .text-cyan-gradient {
-    background: linear-gradient(135deg, #E0F2FE 0%, #38BDF8 50%, #0284C7 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  /* CSS containment for high-fps carousels */
-  .contain-paint {
-    contain: layout paint;
+  /* Editorial micro label */
+  .editorial-tag {
+    font-family: var(--font-jakarta), sans-serif;
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
   }
 }
 
-/* Custom scrollbar */
+/* Custom minimal scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #060B08;
+  background: #080D0A;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 185, 129, 0.4);
+  background: rgba(197, 168, 128, 0.4);
 }

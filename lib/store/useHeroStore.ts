@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { IDestination } from '@/lib/models/Destination';
+import { BANGLADESH_DESTINATIONS } from '@/lib/data/bangladeshDestinations';
 
 interface HeroState {
   destinations: IDestination[];
@@ -30,18 +31,22 @@ interface HeroState {
 }
 
 export const useHeroStore = create<HeroState>((set, get) => ({
-  destinations: [],
+  destinations: BANGLADESH_DESTINATIONS,
   activeIndex: 0,
   isTransitioning: false,
   isPaused: false,
-  slideDurationMs: 6000,
+  slideDurationMs: 7000,
   progress: 0,
   bookmarkedIds: [],
   activeModalDestination: null,
   isBookmarksDrawerOpen: false,
   isSoundscapePlaying: false,
 
-  setDestinations: (destinations) => set({ destinations }),
+  setDestinations: (destinations) => {
+    if (destinations && destinations.length > 0) {
+      set({ destinations });
+    }
+  },
 
   nextSlide: () => {
     const { activeIndex, destinations, isTransitioning } = get();
