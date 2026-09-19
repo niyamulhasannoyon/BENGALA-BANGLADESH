@@ -141,7 +141,7 @@ export const HeroShowcase: React.FC<HeroShowcaseProps> = ({
       <Navbar />
 
       {/* 2. Full-Bleed Hero Section */}
-      <section className="relative min-h-[90vh] lg:min-h-[calc(100vh-4.5rem)] flex flex-col justify-between overflow-hidden">
+      <section className="relative min-h-[90vh] lg:min-h-[calc(100vh-5rem)] flex flex-col justify-between overflow-hidden">
         {/* Synced Cross-fade Hero Background */}
         <HeroBackground />
 

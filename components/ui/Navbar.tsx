@@ -111,7 +111,7 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 left-0 right-0 z-40 glass-header transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 h-18 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-4 sm:py-5 flex items-center justify-between">
         {/* Left: Brand Monogram */}
         <Link href="/" className="flex items-center gap-3 group focus:outline-none focus-visible:ring-1 focus-visible:ring-brass">
           <div className="flex items-center justify-center w-9 h-9 rounded-full bg-white/[0.04] border border-brass/40 text-brass group-hover:border-brass transition-colors">
@@ -156,7 +156,7 @@ export const Navbar: React.FC = () => {
                   exit={{ opacity: 0, y: 6 }}
                   transition={TRANSITION_FAST}
                   onMouseLeave={() => setIsDestDropdownOpen(false)}
-                  className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[480px] p-3 rounded-2xl bg-[#0E1612] border border-white/[0.1] shadow-2xl z-50"
+                  className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[480px] p-3 rounded-2xl bg-[#0E1612] border border-white/[0.1] shadow-2xl z-50 before:content-[''] before:absolute before:-top-3 before:left-0 before:right-0 before:h-3"
                 >
                   <div className="text-[10px] uppercase tracking-[0.22em] text-stone font-semibold px-3 py-1.5 border-b border-white/[0.06] mb-2 flex items-center justify-between">
                     <span>Curated Sanctuaries</span>
